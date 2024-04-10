@@ -1,0 +1,4 @@
+ollama
+bottle
+BeautifulSoup4
+validators
