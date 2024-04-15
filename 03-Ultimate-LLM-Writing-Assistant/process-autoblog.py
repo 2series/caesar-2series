@@ -6,7 +6,7 @@ import os
 import ollama
 import requests
 from bs4 import BeautifulSoup
-import feedparser
+import feedparser  
 import datetime
 from time import sleep
 
@@ -124,9 +124,13 @@ def write_post(post_text):
     return response
 
 def collect_process():
-    feed_list =['https://gizmodo.com/rss', \
+    feed_list = ['https://gizmodo.com/rss', \
                 'https://feeds.arstechnica.com/arstechnica/index', \
-                'https://theverge.com/rss/index.xml']
+                'https://theverge.com/rss/index.xml', \
+                'https://www.dailydoseofds.com/rss/', \
+                'https://www.engadget.com/rss/', \
+                'https://distill.pub/rss.xml', \
+                'https://blogs.nvidia.com/feed/']
 
     for feed in feed_list:
         print(f'FEED -->> {feed}')
