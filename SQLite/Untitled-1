@@ -245,10 +245,72 @@ LIMIT
 
 --  finds invoices whose invoice dates are from January 1 2010 and January 31 2010
 SELECT
-    invoiceid, invoicedate
+    invoiceid, invoicedate, invoicedate, total
 FROM
     invoices
 WHERE
     invoicedate BETWEEN '2010-01-01' AND '2010-01-31'
 ORDER BY
     invoicedate;
+
+-- finds invoices whose dates are not between January 03, 2009, and December 01, 2013
+SELECT
+    invoiceid, billingaddress, invoicedate, total
+FROM
+    invoices
+WHERE
+    invoicedate NOT BETWEEN '2009-01-03' AND '2013-12-01'
+ORDER BY
+    invoicedate;
+
+-- SQLite IN
+
+-- using the IN operator to query the tracks whose media type id is 1 or 2
+SELECT
+    trackid,
+    name,
+    mediatypeid
+FROM
+    tracks
+WHERE
+    mediatypeid IN (1, 2)
+ORDER BY
+    name;
+
+--  uses the OR operator instead of the IN operator
+SELECT
+    trackid,
+    name,
+    mediatypeid
+FROM
+    tracks
+WHERE
+    mediatypeid = 1
+    OR mediatypeid = 2
+ORDER BY
+    name;
+
+-- returns a list of album id of the artist id 12
+SELECT
+    albumid
+FROM
+    albums
+WHERE
+    artistid = 12;
+
+-- get the tracks that belong to the artist id 12, you can combine the IN operator with a subquery
+SELECT
+    trackid,
+    name,
+    albumid
+FROM
+    tracks
+WHERE
+    albumid IN (
+        SELECT
+            albumid
+        FROM
+            albums
+        WHERE
+            artistid = 12
+    );
