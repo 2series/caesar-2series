@@ -1,6 +1,6 @@
--- database: /Users/rihadvariawa/Desktop/caesar-2series/SQLite/chinook.db
+-- database:
 
--- Use the ▷ button in the top right corner to run the entire file.
+-- https://www.sqlitetutorial.net/sqlite-in/
 
 SELECT * FROM tracks;
 
