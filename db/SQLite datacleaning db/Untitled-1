@@ -1,0 +1,262 @@
+-- database: 
+-- Use the ▷ button in the top right corner to run the entire file.
+SELECT
+    *
+FROM
+    layoffs;
+
+-- 1. remove duplicates
+-- 2. standardize the data
+-- 3. null values or blank values
+-- 4. remove any columns
+-- create duplicate dataset of layoffs
+CREATE TABLE
+    layoffs_staging AS
+SELECT
+    *
+FROM
+    layoffs;
+
+SELECT
+    *
+FROM
+    layoffs_staging;
+
+-- identify duplicates
+SELECT
+    *,
+    row_number() OVER (
+        PARTITION BY
+            company,
+            industry,
+            total_laid_off,
+            percentage_laid_off,
+            'date'
+    ) AS row_num
+FROM
+    layoffs_staging;
+
+-- identify duplicates
+WITH
+    duplicate_cte AS (
+        SELECT
+            *,
+            row_number() OVER (
+                PARTITION BY
+                    company,
+                    industry,
+                    total_laid_off,
+                    percentage_laid_off,
+                    'date'
+            ) AS row_num
+        FROM
+            layoffs_staging
+    )
+SELECT
+    *
+FROM
+    duplicate_cte
+WHERE
+    row_num > 1;
+
+-- let's just look at oda to confirm
+SELECT
+    *
+FROM
+    layoffs_staging
+WHERE
+    company = 'Oda';
+
+-- it looks like these are all legitimate entries and shouldn't be deleted. We need to really look at every single row to be accurate
+-- these are our real duplicates
+WITH
+    duplicate_cte AS (
+        SELECT
+            *,
+            row_number() OVER (
+                PARTITION BY
+                    company,
+                    location,
+                    industry,
+                    total_laid_off,
+                    percentage_laid_off,
+                    'date',
+                    country,
+                    funds_raised_millions
+            ) AS row_num
+        FROM
+            layoffs_staging
+    )
+SELECT
+    *
+FROM
+    duplicate_cte
+WHERE
+    row_num > 1;
+
+-- let's just look at oda to confirm
+SELECT
+    *
+FROM
+    layoffs_staging
+WHERE
+    company = 'Casper';
+
+-- would like to do, but not possible
+WITH
+    duplicate_cte AS (
+        SELECT
+            *,
+            row_number() OVER (
+                PARTITION BY
+                    company,
+                    location,
+                    industry,
+                    total_laid_off,
+                    percentage_laid_off,
+                    'date',
+                    country,
+                    funds_raised_millions
+            ) AS row_num
+        FROM
+            layoffs_staging
+    )
+DELETE FROM duplicate_cte
+WHERE
+    row_num > 1;
+
+-- these are the ones we want to delete where the row number is > 1 or 2or greater essentially
+-- now you may want to write it like this:
+--  2. standardize the data
+-- preview the data
+SELECT
+    company,
+    trim(company)
+FROM
+    layoffs_staging2;
+
+-- trim removes leading and trailing (white)spaces
+UPDATE layoffs_staging2
+SET
+    company = trim(company);
+
+-- preview column industry
+SELECT
+    industry
+FROM
+    layoffs_staging2;
+
+-- preview column industry unique
+SELECT DISTINCT
+    industry
+FROM
+    layoffs_staging2;
+
+SELECT DISTINCT
+    industry
+FROM
+    layoffs_staging2
+ORDER BY
+    1;
+
+-- preview layoffs on crypto industry
+SELECT
+    *
+FROM
+    layoffs_staging2
+WHERE
+    industry LIKE 'Crypto%';
+
+-- update column industry crypto
+UPDATE layoffs_staging2
+SET
+    industry = 'Crypto'
+WHERE
+    industry LIKE 'Crypto%';
+
+-- preview column industry unique
+SELECT DISTINCT
+    industry
+FROM
+    layoffs_staging2
+ORDER BY
+    1;
+
+-- preview column location
+SELECT DISTINCT
+    location
+FROM
+    layoffs_staging2
+ORDER BY
+    1;
+
+-- preview column country
+SELECT DISTINCT
+    country
+FROM
+    layoffs_staging2
+ORDER BY
+    1;
+
+-- United States has a period
+-- 
+SELECT
+    *
+FROM
+    layoffs_staging2
+WHERE
+    country LIKE 'United States%'
+ORDER BY
+    1;
+
+-- remove period from United States
+SELECT DISTINCT
+    country,
+    REPLACE(country, '.', '')
+FROM
+    layoffs_staging2
+ORDER BY
+    1;
+
+-- update column country
+UPDATE layoffs_staging2
+SET
+    country = REPLACE(country, '.', '')
+WHERE
+    country LIKE 'United States%';
+
+-- fix column date m/d/y
+SELECT DISTINCT
+    date
+FROM
+    layoffs_staging2
+ORDER BY
+    1;
+
+-- convert to yyyymmdd
+UPDATE layoffs_staging2
+SET
+    date = substr(date, 7, 4) || substr(date, 1, 2) || substr(date, 4, 2)
+WHERE
+    date LIKE '%/%';
+
+-- change datatype text to date
+-- null values
+SELECT
+    *
+FROM
+    layoffs_staging2
+WHERE
+    total_laid_off is null
+    and percentage_laid_off is null;
+
+-- Delete Useless data we can't really use
+DELETE FROM layoffs_staging2
+WHERE
+    total_laid_off IS NULL
+    AND percentage_laid_off IS NULL;
+
+SELECT
+    *
+FROM
+    layoffs_staging2;

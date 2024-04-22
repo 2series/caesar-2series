@@ -1,0 +1,59 @@
+-- database: 
+-- Use the ▷ button in the top right corner to run the entire file.
+CREATE TABLE
+    `layoffs_staging2` (
+        company TEXT,
+        location TEXT,
+        industry TEXT,
+        total_laid_off TEXT,
+        percentage_laid_off TEXT,
+        date TEXT,
+        stage TEXT,
+        country TEXT,
+        funds_raised_millions TEXT,
+        row_num INTEGER
+    );
+
+-- table schema
+SELECT
+    *
+FROM
+    layoffs_staging2;
+
+-- insert values into layoffa_staging2
+INSERT INTO
+    layoffs_staging2
+SELECT
+    *,
+    row_number() OVER (
+        PARTITION BY
+            company,
+            location,
+            industry,
+            total_laid_off,
+            percentage_laid_off,
+            'date',
+            country,
+            funds_raised_millions
+    ) AS row_num
+FROM
+    layoffs_staging;
+
+-- filter on row_num
+SELECT
+    *
+FROM
+    layoffs_staging2
+WHERE
+    row_num > 1;
+
+-- delete duplicates
+DELETE FROM layoffs_staging2
+WHERE
+    row_num > 1;
+
+-- view remaining rows after deleting duplicates
+SELECT
+    *
+FROM
+    layoffs_staging2;
