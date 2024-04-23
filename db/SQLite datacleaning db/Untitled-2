@@ -1,45 +1,40 @@
--- database: 
+
 -- Use the ▷ button in the top right corner to run the entire file.
 CREATE TABLE
     `layoffs_staging2` (
-        company TEXT,
-        location TEXT,
-        industry TEXT,
-        total_laid_off TEXT,
-        percentage_laid_off TEXT,
-        date TEXT,
-        stage TEXT,
-        country TEXT,
-        funds_raised_millions TEXT,
-        row_num INTEGER
+        `company` TEXT,
+        `location` TEXT,
+        `industry` TEXT,
+        `total_laid_off` TEXT,
+        `percentage_laid_off` TEXT,
+        `date` TEXT,
+        `stage` TEXT,
+        `country` TEXT,
+        `funds_raised_millions` TEXT,
+        `row_num` INTEGER
     );
 
--- table schema
-SELECT
-    *
-FROM
-    layoffs_staging2;
-
--- insert values into layoffa_staging2
 INSERT INTO
-    layoffs_staging2
+    `layoffs_staging2`
 SELECT
     *,
-    row_number() OVER (
+    ROW_NUMBER() OVER (
         PARTITION BY
             company,
             location,
             industry,
             total_laid_off,
             percentage_laid_off,
-            'date',
+            `date`,
+            stage,
             country,
             funds_raised_millions
     ) AS row_num
 FROM
-    layoffs_staging;
+    `layoffs_staging`;
 
--- filter on row_num
+-- do a check of layoffs_stageing2 table. our code works by creating a copy of layoffs_staging table
+-- now we can filter on row_num > 1. Now we can identify our dulpicates 
 SELECT
     *
 FROM
@@ -47,13 +42,16 @@ FROM
 WHERE
     row_num > 1;
 
--- delete duplicates
+-- lets delete these duplicates
 DELETE FROM layoffs_staging2
 WHERE
     row_num > 1;
 
--- view remaining rows after deleting duplicates
+-- get a msg: Statement Executed Successfully. our layoffs_staging2 table has no duplicate rows 
+-- number of rows in the table = 2356
 SELECT
-    *
+    COUNT(*)
 FROM
     layoffs_staging2;
+
+-- Back to SCRIPT Untitled-1
