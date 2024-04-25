@@ -1,3 +1,10 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/SQLite datacleaning db/world_lauoffs.db
+-- Use the ▷ button in the top right corner to run the entire file.
+SELECT
+    *
+FROM
+    layoffs_staging;
+
 
 -- Use the ▷ button in the top right corner to run the entire file.
 CREATE TABLE
@@ -5,13 +12,13 @@ CREATE TABLE
         `company` TEXT,
         `location` TEXT,
         `industry` TEXT,
-        `total_laid_off` TEXT,
-        `percentage_laid_off` TEXT,
-        `date` TEXT,
+        `total_laid_off` INT,
+        `percentage_laid_off` INT,
+        `date` DATE,
         `stage` TEXT,
         `country` TEXT,
-        `funds_raised_millions` TEXT,
-        `row_num` INTEGER
+        `funds_raised_millions` INT,
+        `row_num` INT
     );
 
 INSERT INTO

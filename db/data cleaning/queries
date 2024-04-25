@@ -1,3 +1,11 @@
+-- database: 
+-- Use the ▷ button in the top right corner to run the entire file.
+SELECT
+    *
+FROM
+    layoffs;
+
+
 
 -- Use the ▷ button in the top right corner to run the entire file.
 CREATE TABLE
@@ -5,12 +13,12 @@ CREATE TABLE
         `company` TEXT,
         `location` TEXT,
         `industry` TEXT,
-        `total_laid_off` TEXT,
-        `percentage_laid_off` TEXT,
-        `date` TEXT,
+        `total_laid_off` INT,
+        `percentage_laid_off` INT,
+        `date` DATE,
         `stage` TEXT,
         `country` TEXT,
-        `funds_raised_millions` TEXT
+        `funds_raised_millions` INT
     );
 
 INSERT INTO
@@ -249,28 +257,28 @@ FROM
 
 -- using SQLite you cannot change the data type of a column, 
 -- you create a new column w/ the desired Dtype, 
--- then drop the old column
-ALTER TABLE layoffs_staging2
-ADD COLUMN `new_date` date;
+-- then drop the old column. NOTE AT THE BEGINNING I UODATED THE DTYPE FOR EACH COL
+-- ALTER TABLE layoffs_staging2
+-- ADD COLUMN `new_date` date;
 
 -- copy data from "date" column to new "new_date" column
-UPDATE layoffs_staging2
-SET
-    `new_date` = `date`;
+-- UPDATE layoffs_staging2
+-- SET
+--     `new_date` = `date`;
 
 -- preview old and new "date" column
-SELECT
-    `date`,
-    `new_date`
-FROM
-    layoffs_staging2;
+-- SELECT
+--     `date`,
+--     `new_date`
+-- FROM
+--     layoffs_staging2;
 
 -- drop old "date" column
-ALTER TABLE layoffs_staging2
-DROP COLUMN `date`;
+-- ALTER TABLE layoffs_staging2
+-- DROP COLUMN `date`;
 
 -- 3. handling NULL and blank values
--- 3.1 check for NULL values. Returns a blank table?
+-- 3.1 check for NULL values. Returns a blank table...?
 SELECT
     *
 FROM
@@ -281,12 +289,12 @@ WHERE
     OR industry IS NULL
     OR total_laid_off IS NULL
     OR percentage_laid_off IS NULL
-    OR `new_date` IS NULL
+    OR `date` IS NULL
     OR stage IS NULL
     OR country IS NULL
     OR funds_raised_millions IS NULL;
 
--- another way. Returns blank table
+-- another way. Returns blank table...
 SELECT
     *
 FROM
@@ -295,7 +303,7 @@ WHERE
     total_laid_off is null
     and percentage_laid_off is null;
 
--- 3.2 check for blank values. Returns a blank table
+-- 3.2 check for blank values. Returns a blank table...
 SELECT DISTINCT
     industry
 FROM
@@ -373,7 +381,6 @@ WHERE
     )
     AND t2.industry is not null;
 
--- drop t and start again!!!!!!
 -- test. DID NOT WORK
 SELECT
     *
