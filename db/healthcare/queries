@@ -1,0 +1,200 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/healthcare/healthcare.db
+-- Use the ▷ button in the top right corner to run the entire file.
+-- preview all cols
+SELECT
+    *
+FROM
+    `patients-copy`;
+
+-- preview some cols
+SELECT
+    `FIRST`,
+    `LAST`,
+    BIRTHDATE
+FROM
+    `patients-copy`;
+
+-- col encounterclass
+SELECT DISTINCT
+    ENCOUNTERCLASS
+FROM
+    `encounters-copy`;
+
+-- preview encounter total num records
+SELECT
+    *
+FROM
+    `encounters-copy`;
+
+-- using the where clause w/ one condition reduces num rows
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS = 'inpatient';
+
+-- using the where clause w/ two condition reduces num rows
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS = 'inpatient'
+    and DESCRIPTION = 'ICU Admission';
+
+-- using the where clause w/ a third condition reduces num rows
+-- col stop is the discharge date
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS = 'inpatient'
+    and DESCRIPTION = 'ICU Admission'
+    and STOP >= '2023-01-01 00:00';
+
+-- discharge after period
+-- using the "where clause" w/ a third condition reduces num rows
+-- col stop is the discharge date
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS = 'inpatient'
+    and DESCRIPTION = 'ICU Admission'
+    and STOP >= '2023-01-01 00:00' -- discharge after period
+    and STOP <= '2023-12-31 23:59';
+
+-- discharge before period
+-- or dates could be written using the "between clause"
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS = 'inpatient'
+    and DESCRIPTION = 'ICU Admission'
+    and STOP BETWEEN '2023-01-01 00:00' AND '2023-12-31 23:59';
+
+-- "or" clause returns a table, however using "and" clause returns no table
+-- reason being a col cannot be two things at once. it can only be one thing at a time 
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS = 'outpatient'
+    OR ENCOUNTERCLASS = 'ambulatory';
+
+-- using the "in" statement is better
+SELECT
+    *
+FROM
+    `encounters-copy`
+WHERE
+    ENCOUNTERCLASS IN ('outpatient', 'ambulatory');
+
+-- preview table conditions
+SELECT
+    *
+FROM
+    `conditions-copy`;
+
+-- return the num of times each condition occurs in descending order
+-- using the "group by" statement, order by
+SELECT
+    DESCRIPTION,
+    count(*) AS count_of_cond
+FROM
+    `conditions-copy`
+GROUP BY
+    DESCRIPTION
+ORDER BY
+    count(*) DESC;
+
+-- return the num of times each condition occurs in descending order
+-- using the "group by" statement, order by and having count > 2000 conditions
+-- having clause works like a where clause by only on a "group by" statement 
+SELECT
+    DESCRIPTION,
+    count(*) AS count_of_cond
+FROM
+    `conditions-copy`
+GROUP BY
+    DESCRIPTION
+HAVING
+    count(*) > 2000
+ORDER BY
+    count(*) DESC;
+
+-- return the num of times each condition occurs in descending order
+-- using the "group by" statement, order by and having count > 2000 conditions
+-- having clause works like a where clause by only on a "group by" statement
+-- where description is not "some condition". this the description specified
+SELECT
+    DESCRIPTION,
+    count(*) AS count_of_cond
+FROM
+    `conditions-copy`
+where
+    DESCRIPTION != 'Body Mass Index 30.0-30.9\'
+GROUP BY
+    DESCRIPTION
+HAVING
+    count(*) > 2000
+ORDER BY
+    count(*) DESC;
+
+-- CHALLENGE --
+-- 1. write a query that returns all patients from Boston
+SELECT
+    *
+FROM
+    `patients-copy`
+WHERE
+    CITY = 'Boston';
+
+-- 2. return all patients who have been diagnosed with chronic kidney disease (using condition codes "585.1", "585.2", "585.3", "585.4")
+SELECT
+    *
+FROM
+    `conditions-copy`
+WHERE
+    CODE in ('585.1', '585.2', '585.3', '585.4');
+
+-- 3. write a query that does the following:
+-- lists out number of patients per city in desc order
+-- does not include boston
+-- must have at least 100 patients from that city
+SELECT
+    CITY,
+    count(*)
+FROM
+    `patients-copy`
+WHERE
+    CITY != 'Boston'
+GROUP BY
+    CITY
+HAVING
+    count(*) >= 100
+ORDER BY
+    count(*) DESC;
+
+-- work w joins
+-- 1. have a starting table
+-- 2. have a joining table
+-- 3. choice the join type (left, inner, right, full outer)
+-- 4. specify what you want to join on
+-- 5. provide aliases
+-- generally inner join Reduces the num of rows
+-- depending on the circumstances you could end up w/ more or less rows as an end result. hence one needs to study "relationship cardinalities" 1 to 1, 1 to many, many to 1, many to many relationships  
+SELECT
+    t1.*,
+    t2.FIRST,
+    t2.LAST,
+    t2.BIRTHDATE
+FROM
+    `immunizations-copy` as t1
+    LEFT JOIN `patients-copy` as t2 ON t1.PATIENT = t2.Id;

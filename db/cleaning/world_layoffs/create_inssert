@@ -1,0 +1,64 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/cleaning/world_layoffs.db
+-- Use the ▷ button in the top right corner to run the entire file.
+-- Use the ▷ button in the top right corner to run the entire file.
+CREATE TABLE
+    `layoffs_staging2` (
+        `company` TEXT,
+        `location` TEXT,
+        `industry` TEXT,
+        `total_laid_off` INTEGER,
+        `percentage_laid_off` INTEGER,
+        `date` DATE,
+        `stage` TEXT,
+        `country` TEXT,
+        `funds_raised_millions` INTEGER,
+        `row_num` INTEGER
+    );
+
+INSERT INTO
+    `layoffs_staging2`
+SELECT
+    *,
+    ROW_NUMBER() OVER (
+        PARTITION BY
+            company,
+            location,
+            industry,
+            total_laid_off,
+            percentage_laid_off,
+            `date`,
+            stage,
+            country,
+            funds_raised_millions
+    ) AS row_num
+FROM
+    `layoffs_staging`;
+
+-- do a check of layoffs_stageing2 table. our code works by creating a copy of layoffs_staging table
+SELECT
+    *
+FROM
+    layoffs_staging2;
+
+-- now we can filter on row_num > 1. 
+-- to identify our dulpicates 
+SELECT
+    *
+FROM
+    layoffs_staging2
+WHERE
+    row_num > 1;
+
+-- lets delete these duplicates
+DELETE FROM layoffs_staging2
+WHERE
+    row_num > 1;
+
+-- get a msg: Statement Executed Successfully. our layoffs_staging2 table has no duplicate rows 
+-- number of rows in the table = 2356
+SELECT
+    COUNT(*)
+FROM
+    layoffs_staging2;
+
+-- Back to SCRIPT Untitled-1
