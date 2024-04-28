@@ -1,0 +1,108 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/cleaning/sql/world_layoffs/world_layoffs.db
+-- Use the ▷ button in the top right corner to run the entire file.
+CREATE TABLE
+    `layoffs-copy` (
+        `company` TEXT,
+        `location` TEXT,
+        `industry` TEXT,
+        `total_laid_off` INTEGER,
+        `percentage_laid_off` REAL,
+        `date` date,
+        `stage` TEXT,
+        `country` TEXT,
+        `funds_raised_millions` INTEGER
+    );
+
+INSERT INTO
+    `layoffs-copy`
+SELECT
+    *
+FROM
+    `layoffs`;
+
+-- alter table
+-- ALTER TABLE `layoffs-copy`
+-- ADD COLUMN `row_num` INTEGER;
+
+CREATE TABLE
+    `layoffs-copy2` (
+        `company` TEXT,
+        `location` TEXT,
+        `industry` TEXT,
+        `total_laid_off` INTEGER,
+        `percentage_laid_off` INTEGER,
+        `date` date,
+        `stage` TEXT,
+        `country` TEXT,
+        `funds_raised_millions` INTEGER,
+        `row_num` INTEGER -- col added
+    );
+
+INSERT INTO
+    `layoffs-copy2` -- update this line w your table name
+SELECT
+    *,
+    ROW_NUMBER() OVER (
+        PARTITION BY
+            company,
+            location,
+            industry,
+            total_laid_off,
+            percentage_laid_off,
+            `date`,
+            stage,
+            country,
+            funds_raised_millions
+    ) AS row_num
+FROM
+    `layoffs-copy`; -- update this line w your table name
+
+-- identify duplicates by partition over all cols
+WITH
+    duplicate_cte AS (
+        SELECT
+            *,
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    company,
+                    location,
+                    industry,
+                    total_laid_off,
+                    percentage_laid_off,
+                    `date`,
+                    stage,
+                    country,
+                    funds_raised_millions
+            ) AS row_num
+        FROM
+            `layoffs-copy2`
+    )
+SELECT
+    *
+FROM
+    duplicate_cte
+WHERE
+    row_num > 1;
+
+-- do a check of layoffs-copy2 table. our code works by creating a copy of layoffs_staging table
+-- now we can filter on row_num > 1. Now we can identify our dulpicates 
+-- SELECT
+--     *
+-- FROM
+--     'layoffs-copy2'
+-- WHERE
+--     row_num > 1;
+
+-- lets delete these duplicates
+DELETE FROM 'layoffs-copy2'
+WHERE
+    row_num > 1;
+
+-- get a msg: Statement Executed Successfully. our layoffs_staging2 table has no duplicate rows 
+-- number of rows in the table = 2356
+SELECT
+    COUNT(*)
+FROM
+    'layoffs-copy2';
+
+-- NOW WORK W table layoffs-copy2

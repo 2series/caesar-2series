@@ -19,7 +19,7 @@ CREATE TABLE
         `stage` TEXT,
         `country` TEXT,
         `funds_raised_millions` INT,
-        `row_num` INT
+        `row_num` INT -- col added
     );
 
 INSERT INTO
