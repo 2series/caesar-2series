@@ -1,5 +1,7 @@
--- database: /Users/rihadvariawa/Desktop/caesar-2series/db/cleaning/world_layoffs/world_layoffs.db
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/cleaning/sql/world_layoffs/world_layoff.db
+
 -- Use the ▷ button in the top right corner to run the entire file.
+
 SELECT
     *
 FROM
@@ -61,3 +63,4 @@ FROM
     layoffs_staging2;
 
 -- Back to SCRIPT Untitled-1
+
