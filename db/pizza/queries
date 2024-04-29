@@ -1,0 +1,72 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/pizza/pizza.db
+-- Use the ▷ button in the top right corner to run the entire file.
+-- How many customers do we have each day?
+SELECT
+    COUNT(o.order_id),
+    strftime('%Y-%m-%d', o.date) AS date
+FROM
+    orders o
+GROUP BY
+    strftime('%Y-%m-%d', o.date);
+
+--  Are there any peak hours?
+SELECT
+    COUNT(o.order_id),
+    strftime('%H', o.time) AS hour
+FROM
+    orders o
+GROUP BY
+    strftime('%H', o.time)
+ORDER BY
+    COUNT(o.order_id) DESC;
+
+-- How many pizzas are typically in an order?
+SELECT
+    AVG(od.quantity)
+FROM
+    orders o
+    JOIN order_details od ON o.order_id = od.order_id;
+
+-- Do we have any bestsellers?
+SELECT
+    p.pizza_type_id,
+    pt.name AS pizza_name,
+    AVG(od.quantity) AS avg_orders
+FROM
+    orders o
+    JOIN order_details od ON o.order_id = od.order_id
+    JOIN pizzas p ON od.pizza_id = p.pizza_id
+    JOIN pizza_types pt ON p.pizza_type_id = pt.pizza_type_id
+GROUP BY
+    p.pizza_type_id,
+    pt.name
+ORDER BY
+    avg_orders DESC;
+
+-- How much money did we make this year?
+-- Can we identify any seasonality in the sales?
+SELECT
+    COUNT(o.order_id),
+    strftime('%Y-%m', o.date) AS month
+FROM
+    orders o
+GROUP BY
+    strftime('%Y-%m', o.date)
+ORDER BY
+    strftime('%Y-%m', o.date);
+
+-- Are there any pizzas we should take of the menu, or any promotions we could leverage?
+SELECT
+    p.pizza_type_id,
+    pt.name AS pizza_name,
+    AVG(od.quantity) AS avg_orders
+FROM
+    orders o
+    JOIN order_details od ON o.order_id = od.order_id
+    JOIN pizzas p ON od.pizza_id = p.pizza_id
+    JOIN pizza_types pt ON p.pizza_type_id = pt.pizza_type_id
+GROUP BY
+    p.pizza_type_id,
+    pt.name
+HAVING
+    AVG(od.quantity) < 1;
