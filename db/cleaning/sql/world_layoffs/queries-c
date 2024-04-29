@@ -192,3 +192,6 @@ SET
 WHERE
     country like 'United States%';
 
+-- drop col "row_num"
+ALTER TABLE `layoffs-copy2`
+DROP COLUMN `row_num`;
