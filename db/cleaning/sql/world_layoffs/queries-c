@@ -23,7 +23,6 @@ FROM
 -- alter table
 -- ALTER TABLE `layoffs-copy`
 -- ADD COLUMN `row_num` INTEGER;
-
 CREATE TABLE
     `layoffs-copy2` (
         `company` TEXT,
@@ -55,8 +54,9 @@ SELECT
             funds_raised_millions
     ) AS row_num
 FROM
-    `layoffs-copy`; -- update this line w your table name
+    `layoffs-copy`;
 
+-- update this line w your table name
 -- identify duplicates by partition over all cols
 WITH
     duplicate_cte AS (
@@ -92,7 +92,6 @@ WHERE
 --     'layoffs-copy2'
 -- WHERE
 --     row_num > 1;
-
 -- lets delete these duplicates
 DELETE FROM 'layoffs-copy2'
 WHERE
@@ -106,3 +105,90 @@ FROM
     'layoffs-copy2';
 
 -- NOW WORK W table layoffs-copy2
+-- preview col "company"
+SELECT DISTINCT
+    company
+FROM
+    'layoffs-copy2'
+ORDER BY
+    company;
+
+-- compare old and new col "company" + remove whitespaces
+SELECT
+    company,
+    trim(company)
+FROM
+    'layoffs-copy2';
+
+-- update table
+UPDATE 'layoffs-copy2'
+SET
+    company = trim(company);
+
+-- show table
+SELECT
+    *
+FROM
+    `layoffs-copy2`;
+
+-- preview col "location"
+SELECT DISTINCT
+    location
+FROM
+    'layoffs-copy2'
+ORDER BY
+    location;
+
+-- compare old and new col "location"
+SELECT
+    location,
+    trim(location)
+FROM
+    'layoffs-copy2';
+
+-- preview col "industry"
+SELECT DISTINCT
+    industry
+FROM
+    'layoffs-copy2'
+ORDER BY
+    industry;
+
+-- check, if there is anything disctinct/special about crypto industry
+SELECT
+    industry
+FROM
+    `layoffs-copy2`
+WHERE
+    industry like 'Crypto%';
+
+-- update table
+UPDATE `layoffs-copy2`
+SET
+    industry = 'Crypto'
+WHERE
+    industry like 'Crypto%';
+
+-- preview col "country"
+SELECT DISTINCT
+    country
+FROM
+    'layoffs-copy2'
+ORDER BY
+    country;
+
+-- check, if their is anything disctinct/special about "United States." country! Nothing special, so lets update table
+SELECT
+    country
+FROM
+    `layoffs-copy2`
+where
+    country like 'United States%';
+
+-- update table
+UPDATE `layoffs-copy2`
+SET
+    country = 'United States'
+WHERE
+    country like 'United States%';
+

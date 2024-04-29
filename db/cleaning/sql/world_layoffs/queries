@@ -161,7 +161,7 @@ where
 -- 2.4 lets look at country column. Look for spwcial characters, if any, we have a period after United Stated
 -- 2.5 look at column Dtypes
 -- 2.6 remove unwanted columns
--- remove row_num column
+-- remove col "row_num" 
 ALTER TABLE layoffs_staging2
 DROP COLUMN row_num;
 
@@ -246,7 +246,7 @@ FROM
 ORDER BY
     1;
 
--- -- check, if their is anything disctinct/special about "United States." country! Nothing special, so lets update table
+-- check, if their is anything disctinct/special about "United States." country! Nothing special, so lets update table
 SELECT
     country
 FROM
