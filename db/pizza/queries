@@ -1,15 +1,25 @@
 -- database: /Users/rihadvariawa/Desktop/caesar-2series/db/pizza/pizza.db
 -- Use the ▷ button in the top right corner to run the entire file.
 -- How many customers do we have each day?
+-- ollama: llama3:instruct = Returns orders for each day of January
+-- SELECT
+--     COUNT(o.order_id),
+--     strftime('%Y-%m-%d', o.date) AS date
+-- FROM
+--     orders o
+-- GROUP BY
+--     strftime('%Y-%m-%d', o.date);
+-- openai = Returns orders for each day of the year
 SELECT
-    COUNT(o.order_id),
-    strftime('%Y-%m-%d', o.date) AS date
+    date,
+    COUNT(DISTINCT order_id) AS total_customers
 FROM
-    orders o
+    orders
 GROUP BY
-    strftime('%Y-%m-%d', o.date);
+    date;
 
 --  Are there any peak hours?
+-- ollama: llama3:instruct = Returns count of orders by hour
 SELECT
     COUNT(o.order_id),
     strftime('%H', o.time) AS hour
@@ -20,14 +30,35 @@ GROUP BY
 ORDER BY
     COUNT(o.order_id) DESC;
 
+-- openai = Return total orders at 12:00 hour
+SELECT
+    time,
+    COUNT(order_id) AS total_orders
+FROM
+    orders
+GROUP BY
+    time
+ORDER BY
+    total_orders DESC
+LIMIT
+    10;
+
 -- How many pizzas are typically in an order?
+-- ollama: llama3:instruct = avg order quantity
 SELECT
     AVG(od.quantity)
 FROM
     orders o
     JOIN order_details od ON o.order_id = od.order_id;
 
+-- openai
+SELECT
+    AVG(quantity) AS average_pizzas_per_order
+FROM
+    order_details;
+
 -- Do we have any bestsellers?
+-- ollama: llama3:instruct = Return list of most ordered pizzas
 SELECT
     p.pizza_type_id,
     pt.name AS pizza_name,
@@ -43,8 +74,35 @@ GROUP BY
 ORDER BY
     avg_orders DESC;
 
+-- openai = Returns the best ordered pizza
+SELECT
+    pizza_id,
+    SUM(quantity) AS total_quantity
+FROM
+    order_details
+GROUP BY
+    pizza_id
+ORDER BY
+    total_quantity DESC;
+
+-- Do we have 10 bestsellers?
+-- openai
+SELECT
+    pizza_id,
+    SUM(quantity) AS total_quantity
+FROM
+    order_details
+GROUP BY
+    pizza_id
+ORDER BY
+    total_quantity DESC
+LIMIT
+    10;
+
 -- How much money did we make this year?
+-- Better Q: How much money did we make in each month?
 -- Can we identify any seasonality in the sales?
+-- ollama: llama3:instruct =
 SELECT
     COUNT(o.order_id),
     strftime('%Y-%m', o.date) AS month
@@ -55,7 +113,36 @@ GROUP BY
 ORDER BY
     strftime('%Y-%m', o.date);
 
--- Are there any pizzas we should take of the menu, or any promotions we could leverage?
+-- openai
+-- How much money did we make in each month?
+SELECT
+    strftime('%m', o.date) AS month,
+    SUM(od.quantity * p.price) AS total_revenue
+FROM
+    order_details od
+    JOIN pizzas p ON od.pizza_id = p.pizza_id
+    JOIN orders o ON od.order_id = o.order_id
+GROUP BY
+    month;
+
+-- Can we identify any seasonality in the sales
+-- ollama: llama3:instruct =
+-- Can we identify any seasonality in the sales?
+-- openai
+-- SELECT
+--     CASE
+--         WHEN month IN ('12', '01', '02') THEN 'Winter'
+--         WHEN month IN ('03', '04', '05') THEN 'Spring'
+--         WHEN month IN ('06', '07', '08') THEN 'Summer'
+--         WHEN month IN ('09', '10', '11') THEN 'Fall'
+--     END AS season,
+--     SUM(total_revenue) AS total_revenue
+-- FROM
+--     monthly_sales
+-- GROUP BY
+--     season;
+-- Are there any pizzas we should take of the menu
+-- ollama: llama3:instruct = Returns no output
 SELECT
     p.pizza_type_id,
     pt.name AS pizza_name,
@@ -70,3 +157,31 @@ GROUP BY
     pt.name
 HAVING
     AVG(od.quantity) < 1;
+
+-- openai
+SELECT
+    pt.name,
+    COUNT(od.order_details_id) AS total_orders
+FROM
+    order_details od
+    JOIN pizzas p ON od.pizza_id = p.pizza_id
+    JOIN pizza_types pt ON p.pizza_type_id = pt.pizza_type_id
+GROUP BY
+    pt.name
+ORDER BY
+    total_orders;
+
+-- are their any promotions we could leverage?
+-- ollama: llama3:instruct =
+-- openai
+SELECT
+    pt.name,
+    COUNT(od.order_details_id) AS total_orders
+FROM
+    order_details od
+    JOIN pizzas p ON od.pizza_id = p.pizza_id
+    JOIN pizza_types pt ON p.pizza_type_id = pt.pizza_type_id
+GROUP BY
+    pt.name
+ORDER BY
+    total_orders ASC;
