@@ -1,0 +1,131 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/computer_hardware_sales/crm_sales.db
+-- Use the ▷ button in the top right corner to run the entire file.
+-- 1. Track successful sales leads, providing insight into overall performance magnitude, particularly in Won deal in the Deal Stage analysis
+SELECT
+    COUNT(*),
+    'Won' AS deal_stage
+FROM
+    sales_pipeline
+WHERE
+    deal_stage = 'Won';
+
+-- 2. Calculate the success rate of closing deals, offering a more nuanced understanding of agent performance
+SELECT
+    SUM(
+        CASE
+            WHEN deal_stage = 'Won' THEN 1
+            ELSE 0
+        END
+    ) AS successful_deals,
+    COUNT(*) AS total_deals,
+    ROUND(
+        SUM(
+            CASE
+                WHEN deal_stage = 'Won' THEN 1
+                ELSE 0
+            END
+        ) * 100.0 / COUNT(*),
+        2
+    ) AS success_rate
+FROM
+    sales_pipeline;
+
+-- 3. Measure the average duration between engagement and deal closure, indicating efficiency in deal management
+SELECT
+    AVG(c.close_date - c.engage_date) AS avg_deal_duration
+FROM
+    sales_pipeline c
+WHERE
+    c.deal_stage = 'Won';
+
+-- 4. Evaluate the total sales as well as the average value of successful sales, offering contextual insights into performance aggregated by Sales Agent, Product, Sector and Country
+SELECT
+    s.sales_agent,
+    p.product,
+    a.sector,
+    SUM(c.close_value) AS total_sales,
+    AVG(c.close_value) AS avg_sales_value
+FROM
+    sales_pipeline c
+    JOIN sales_team s ON c.sales_agent = s.sales_agent
+    JOIN products p ON c.product = p.product
+    JOIN accounts a ON c.account = a.account
+WHERE
+    c.deal_stage = 'Won'
+GROUP BY
+    s.sales_agent,
+    p.product,
+    a.sector;
+
+-- 5. Assess changes, trends, or fluctuations in various aspects such as sales, or other key performance indicators from one quarter to the next
+SELECT
+    strftime('%Y-%q', engage_date) AS quarter,
+    AVG(close_value) AS avg_close_value,
+    SUM(close_value) AS total_close_value
+FROM
+    sales_pipeline
+WHERE
+    deal_stage = 'Won'
+GROUP BY
+    strftime('%Y-%q', engage_date)
+ORDER BY
+    quarter ASC;
+
+-- 6. The best 5 selling poducts
+SELECT
+    p.product,
+    COUNT(*) AS total_sales,
+    SUM(c.close_value) AS total_revenue
+FROM
+    sales_pipeline c
+    JOIN products p ON c.product = p.product
+WHERE
+    c.deal_stage = 'Won'
+GROUP BY
+    p.product
+ORDER BY
+    total_revenue DESC
+LIMIT
+    5;
+
+-- 7. How much sales did we make in each month
+SELECT
+    strftime('%Y-%m', engage_date) AS month,
+    SUM(close_value) AS total_sales
+FROM
+    sales_pipeline
+WHERE
+    deal_stage = 'Won'
+GROUP BY
+    strftime('%Y-%m', engage_date)
+ORDER BY
+    month;
+
+-- Can we identify any seasonality in the sales of products
+SELECT
+    strftime('%m', engage_date) AS month,
+    SUM(close_value) AS total_sales
+FROM
+    sales_pipeline
+WHERE
+    deal_stage = 'Won'
+GROUP BY
+    strftime('%m', engage_date)
+ORDER BY
+    month;
+
+-- Who are the 5 best sales agents
+SELECT
+    s.sales_agent,
+    SUM(c.close_value) AS total_sales
+FROM
+    sales_pipeline c
+    JOIN sales_team s ON c.sales_agent = s.sales_agent
+WHERE
+    c.deal_stage = 'Won'
+GROUP BY
+    s.sales_agent
+ORDER BY
+    total_sales DESC
+LIMIT
+    5;
