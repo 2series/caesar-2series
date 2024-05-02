@@ -17,4 +17,4 @@ Furthermore, recognizing the importance of understanding product sales performan
 
 Data cleaning was minimal, and the modeling process was straightforward. The primary focus was on establishing a connection between the Date and sales tables to synchronize engage and close dates, with the engage date serving as the primary reference point for metric calculations
 
-[](../cleaning/images/computer_hardware_sales.png)
+![table relationship](../cleaning/images/computer_hardware_sales.png)
