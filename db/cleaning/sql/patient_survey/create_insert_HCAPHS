@@ -1,0 +1,17 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/cleaning/sql/patient_survey/pstient_survey.db
+-- Use the ▷ button in the top right corner to run the entire file.
+CREATE TABLE
+    `hospital_beds-copy` (
+        `Provider CCN` INTEGER,
+        `Hospital Name` BLOB,
+        `Fiscal Year Begin Date` date,
+        `Fiscal Year End Date` date,
+        `number_of_beds` INTEGER
+    );
+
+INSERT INTO
+    `hospital_beds-copy`
+SELECT
+    *
+FROM
+    `hospital_beds`;

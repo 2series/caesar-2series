@@ -1,0 +1,28 @@
+-- database: /Users/rihadvariawa/Desktop/caesar-2series/db/cleaning/sql/patient_survey/pstient_survey.db
+-- Use the ▷ button in the top right corner to run the entire file.
+CREATE TABLE
+    `HCAHPS-copy` (
+        `Facility ID` INTEGER,
+        `Facility Name` TEXT,
+        `Address` BLOB,
+        `City/Town` TEXT,
+        `State` TEXT,
+        `ZIP Code` INTEGER,
+        `County/Parish` TEXT,
+        `Telephone Number` BLOB,
+        `HCAHPS Measure ID` BLOB,
+        `HCAHPS Question` BLOB,
+        `HCAHPS Answer Description` BLOB,
+        `HCAHPS Answer Percent` REAL,
+        `Number of Completed Surveys` INTEGER,
+        `Survey Response Rate Percent` REAL,
+        `Start Date` date,
+        `End Date` date
+    );
+
+INSERT INTO
+    `HCAHPS-copy`
+SELECT
+    *
+FROM
+    `HCAHPS`;
