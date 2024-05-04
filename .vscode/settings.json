@@ -2,5 +2,17 @@
     "taipyStudio.gUI.elementsFilePaths": [],
     "cSpell.words": [
         "ententially"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "PG Local",
+            "database": "healthcare_survey",
+            "username": "postgres",
+            "connectionTimeout": 30
+        }
     ]
 }
