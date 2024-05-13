@@ -1,0 +1,21 @@
+CustomerID,First_Name,Last_Name,Phone_Number,Street_Address,State,Zip_Code,Paying Customer,Do_Not_Contact
+1001,Frodo,Baggins,123-545-5421,123 Shire Lane, Shire,,Y,N
+1002,Abed,Nadir,123-643-9775,93 West Main Street,,,N,Y
+1003,Walter,White,706-950-0392,298 Drugs Driveway,,,N,
+1004,Dwight,Schrute,123-543-2345,980 Paper Avenue, Pennsylvania, 18503,Y,Y
+1005,Jon,Snow,876-678-3469,123 Dragons Road,,,Y,N
+1006,Ron,Swanson,304-762-2467,768 City Parkway,,,Y,Y
+1007,Jeff,Winger,,1209 South Street,,,N,N
+1008,Sherlock,Holmes,876-678-3469,98 Clue Drive,,,N,N
+1009,Gandalf,,,123 Middle Earth,,,Y,
+1010,Peter,Parker,123-545-5421,25th Main Street, New York,,Y,N
+1011,Samwise,Gamgee,,612 Shire Lane, Shire,,Y,N
+1012,Harry,Potter,706-950-0392,2394 Hogwarts Avenue,,,Y,
+1013,Don,Draper,123-543-2345,2039 Main Street,,,Y,N
+1014,Leslie,Knope,876-678-3469,343 City Parkway,,,Y,N
+1015,Toby,Flenderson,304-762-2467,214 HR Avenue,,,N,N
+1016,Ron,Weasley,123-545-5421,2395 Hogwarts Avenue,,,N,N
+1017,Michael ,Scott,123-643-9775,121 Paper Avenue, Pennsylvania,,Y,N
+1018,Clark,Kent,706-950-0392,3498 Super Lane,,,Y,
+1019,Creed,Braton,,,,,,Y
+1020,Anakin,Skywalker,876-678-3469,910 Tatooine Road, Tatooine,,Y,N
