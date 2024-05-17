@@ -1,3 +1,0 @@
-## Multilingual Interpreter
-
-yt --transcript 
