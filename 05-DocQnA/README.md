@@ -1,10 +1,10 @@
-**Title:** Retrieval Augmented Generation Questions-Answering Application
+# Rag Questions-Answering Application using Pre-trained language model roberta-base for QA
 
-**Description:**
-
-This project utilizes the `transformers` library to develop a Retrieval Augmented Generation (RAG) application for question-answering. The application allows users to upload a file and enter a question, with the RAG model providing an answer based on the context of the document.
+## Description:
+This project utilizes the `transformers` library to develop a Retrieval Augmented Generation (RAG) application for QA. The application allows users to upload a file and enter a question, with the RAG model providing an answer based on the context of the document.
 
 [Rag Qustion-Answer App](https://huggingface.co/spaces/2seriescs/Question-Answering)
+
 
 **Key Features:**
 
