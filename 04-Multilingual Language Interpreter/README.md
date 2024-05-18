@@ -1,5 +1,10 @@
 # Multilingual Language Interpreter using NLLB-200 a research MT model that supports 200 languages
 
+## Overview
+What It Does: NLLB-200 is a 600M parameter machine translation model that translates between 200 languages
+
+For English to Foreign Translation
+
 ## Main Pointts
 NLLB-200 is intended for research in machine translation, particularly for low-resource languages.
 It enables single-sentence translation and is not meant for production deployment or document translation.

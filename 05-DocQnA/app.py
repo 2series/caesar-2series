@@ -25,6 +25,7 @@ question_answer = pipeline("question-answering",
 #                          context=context )
 # print(answer["answer"])
 
+
 def read_file_content(file_obj):
     """
     Reads the content of a file object and returns it.

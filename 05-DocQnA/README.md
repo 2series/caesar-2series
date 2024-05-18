@@ -1,9 +1,14 @@
-# Rag Questions-Answering Application using Pre-trained language model roberta-base for QA
+# QA Application using model name `deepset/roberta-base-squad2` for QA
 
-## Description:
+## Overview
+What It Does: This is a transformer-based question-answering model that was fine-tuned on the SQuAD 2.0 dataset
+
+It is used for tasks such as extracting answers from documents in response to user questions
+
+## Description
 This project utilizes the `transformers` library to develop a Retrieval Augmented Generation (RAG) application for QA. The application allows users to upload a file and enter a question, with the RAG model providing an answer based on the context of the document.
 
-[Rag Qustion-Answer App](https://huggingface.co/spaces/2seriescs/Question-Answering)
+[QA App](https://huggingface.co/spaces/2seriescs/Question-Answering)
 
 
 **Key Features:**
